@@ -10,7 +10,7 @@ set of int:points=0..30;
 array[lancers] of var quilles:partie;
 array[tours] of var points:score;
 array[tours] of var points:bonus;
-var int:score_total;
+int:score_total;
 var int:nb_spares;
 var int:nb_strikes;
 var int:nb_fails; %nombre de lancer = 0 (pas après un strike)
@@ -44,7 +44,7 @@ constraint nb_spares=sum(t in tours)(bool2int((partie[2*t-1]<10)/\(partie[2*t-1]
 constraint nb_fails=sum(t in tours)(bool2int(partie[2*t-1]=0))+sum(t in tours)(bool2int((partie[2*t]=0)/\(partie[2*t-1]!=10)));
 
 %score souhaité
-constraint (score_total=1);
+%constraint (score_total=1);
 
 %resolution
 
