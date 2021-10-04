@@ -26,8 +26,8 @@ constraint forall( t in tours where t<10)(score[t]=partie[2*t-1]+partie[2*t]); %
 %les bonus
 constraint forall(t in tours)((partie[2*t-1]+partie[2*t]<10)->(bonus[t]=0)); %pas de bonus 
 constraint forall(t in tours)(((partie[2*t-1]+partie[2*t]=10)/\(partie[2*t-1]!=10))->(bonus[t]=partie[2*t+1])); %spare
-constraint forall(t in 1..9)((partie[2*t-1]=10 /\ partie[2*t+2]!=10)->(bonus[t]=partie[2*t+1]+partie[2*t+2])); %strike pas suivi d'un strike
-constraint forall(t in 1..9)((partie[2*t-1]=10 /\ partie[2*t+2]=10)->(bonus[t]=partie[2*t+1]+partie[2*t+3])); %strikesuivi d'un strike
+constraint forall(t in 1..9)((partie[2*t-1]=10 /\ partie[2*t+1]!=10)->(bonus[t]=partie[2*t+1]+partie[2*t+2])); %strike pas suivi d'un strike
+constraint forall(t in 1..8)((partie[2*t-1]=10 /\ partie[2*t+1]=10)->(bonus[t]=partie[2*t+1]+partie[2*t+3])); %strike suivi d'un strike
 constraint ((partie[19]=10)->(bonus[10]=partie[20]+partie[21])); %dernier tour
 
 %contraintes de jeu
@@ -38,7 +38,7 @@ constraint ((partie[19]!=10)->(partie[19]+partie[20]<=10));
 constraint nb_strikes=sum(t in tours)(bool2int(partie[2*t-1]=10));
 
 %score souhaité
-constraint (score_total=270);
+constraint (score_total=100);
 
 %resolution
 
