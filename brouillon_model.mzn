@@ -36,6 +36,8 @@ constraint ((partie[19]!=10)->(partie[19]+partie[20]<=10));
 
 %nombre de spares et de strikes et coups nuls
 constraint nb_strikes=sum(t in tours)(bool2int(partie[2*t-1]=10));
+constraint nb_spares=sum(t in tours)(bool2int((partie[2*t-1]<10)/\(partie[2*t-1]+partie[2*t]=10)));
+constraint nb_fails=sum(t in tours)(bool2int(partie[2*t-1]=0))+sum(t in tours)(bool2int((partie[2*t]=0)/\(partie[2*t-1]!=10)));
 
 %score souhaité
 constraint (score_total=100);
