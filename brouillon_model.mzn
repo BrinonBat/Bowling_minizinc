@@ -5,7 +5,8 @@ set of int:lancers=1..21;
 set of int:tours=1..10;
 set of int:points=0..30;
 
-%array[lancers] of quilles:init=[10,0,8,1,8,2,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+% !!! on utilise des -1 pour indiquer les cases vides.
+array[lancers] of int:init=[10,-1,8,1,8,2,7,-1,-1,-1,-1,-1,-1,-1,-1,0,0,-1,-1,-1,-1]; % liste de lancers à compléter par l'algo
 
 array[lancers] of var quilles:partie;
 array[tours] of var points:score;
@@ -16,7 +17,7 @@ var int:nb_strikes;
 var int:nb_fails; %nombre de lancer = 0 (pas après un strike)
 
 %init
-%constraint forall(l in lancers)(partie[l]=init[l]);
+constraint forall(l in lancers where init[l]!=-1)(partie[l]=init[l]);
 
 %contraintes de liaisons
 constraint (score_total=sum(t in tours)(score[t])+sum(t in tours)(bonus[t]));
