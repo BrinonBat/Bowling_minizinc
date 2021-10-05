@@ -6,7 +6,7 @@ set of int:tours=1..10;
 set of int:points=0..30;
 
 % !!! on utilise des -1 pour indiquer les cases vides.
-array[lancers] of int:init=[10,-1,8,1,8,2,7,-1,-1,-1,-1,-1,-1,-1,-1,0,0,-1,-1,-1,-1]; % liste de lancers à compléter par l'algo
+array[lancers] of int:init; % liste de lancers à compléter par l'algo
 
 array[lancers] of var quilles:partie;
 array[tours] of var points:score;
