@@ -42,9 +42,14 @@ def complete(solution,score,partie):
         print(EntryToValue(partie))
         # Solve and print solution
         result = instance.solve()
+        """
         if result.status==Status.SATISFIED:
             solution.set(result["partie"])
+        else :
+            solution.set("UNSATISFIABLE")
+        """
 
+        solution.set(result["partie"])
     except ValueError:
         pass
 
