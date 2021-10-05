@@ -14,6 +14,7 @@ def generate(solution,score):
         instance = Instance(gecode, model)
         # Assign values
         instance["score_total"] = int(score.get())
+        instance["init"] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
         # Solve and print solution
         result = instance.solve()
         solution.set(result["partie"])

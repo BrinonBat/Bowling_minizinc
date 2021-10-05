@@ -5,15 +5,6 @@ import view_complete
 import view_score
 from minizinc import Instance, Model, Solver
 
-#servira a verifier si x est valide avant de l'envoyer à minizinc
-def is_ok(x):
-    try:
-        x = int(x)
-        if(x>=0 and x<11): return True
-        return False
-    except:
-        return False
-
 # Title of the window
 root = Tk()
 root.title("Bowling !")
