@@ -4,6 +4,15 @@ from tkinter import font
 
 from minizinc import Instance, Model, Solver
 
+#servira a verifier si x est valide avant de l'envoyer à minizinc
+def is_ok(x):
+    try:
+        x = int(x)
+        if(x>=0 and x<11): return True
+        return False
+    except:
+        return False
+
 def generate(*args):
     try:
         # Load model from file
@@ -100,8 +109,9 @@ score_entry2 = ttk.Entry(frame2score, width=10, textvariable=score2)
 score_entry2.grid(column=1, row=0, sticky=(W, E))
 
 partie = StringVar()
-partie_entry = ttk.Entry(frame2partie, width=50, textvariable=partie)
+partie_entry = ttk.Entry(frame2partie, width=40, textvariable=partie)
 partie_entry.grid(column=1, row=1, sticky=(W, E))
+
 
 solution2 = StringVar()
 ttk.Label(frame2solution, width=50, textvariable=solution2).grid(column=1, row=2, sticky=(W, E))
