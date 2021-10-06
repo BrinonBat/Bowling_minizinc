@@ -1,57 +1,8 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import font
-from minizinc import Instance, Model, Solver, Status
+import interface_mzn
 
-#servira a verifier si x est valide avant de l'envoyer à minizinc
-def is_ok(x):
-    try:
-        x = int(x)
-        if(x>=0 and x<=10): return True
-        return False
-    except:
-        return False
 
-#convertion de la liste de saisie String en liste d'Int utilisable par minizinc
-def EntryToValue(entries):
-    entry_values=[]
-
-    for i in range (0,21):
-        if(entries[i].get()):
-            if is_ok(entries[i].get()):
-                entry_values.append(int(entries[i].get()))
-            else :
-                print("error : please select a number between 0 and 10 at indice "+i)
-                entry_values.append(-1)
-        else :
-            entry_values.append(-1)
-    
-    return entry_values
-
-def complete(solution,score,partie):
-    try:
-        # Load model from file
-        model = Model("brouillon_model.mzn")
-        # Find the MiniZinc solver configuration for Gecode
-        gecode = Solver.lookup("gecode")
-        # Create an Instance of the model for Gecode
-        instance = Instance(gecode, model)
-        # Assign values
-        instance["score_total"] = int(score.get())
-        instance["init"] = EntryToValue(partie)
-        print(EntryToValue(partie))
-        # Solve and print solution
-        result = instance.solve()
-        """
-        if result.status==Status.SATISFIED:
-            solution.set(result["partie"])
-        else :
-            solution.set("UNSATISFIABLE")
-        """
-
-        solution.set(result["partie"])
-    except ValueError:
-        pass
 
 def PrintWindow(mainframe):
     frame2 = ttk.Labelframe(mainframe, text='Compléter une partie', padding="3 3 12 12")
@@ -72,10 +23,14 @@ def PrintWindow(mainframe):
     score_entry2 = ttk.Entry(frame2score, width=10, textvariable=score2)
     score_entry2.grid(column=1, row=0, sticky=(W, E))
 
+    nb_fails=0
+    nb_spares=0
+    nb_strikes=0
+
     solution2 = StringVar()
     ttk.Label(frame2solution, width=50, textvariable=solution2).grid(column=1, row=3, sticky=(W, E))
 
-    ttk.Button(frame2solution, text="Valider", command=lambda: complete(solution2,score2,entries)).grid(column=1, row=1, sticky=W)
+    ttk.Button(frame2solution, text="Valider", command=lambda: interface_mzn.complete(nb_fails,nb_spares,nb_strikes,solution2,score2,entries)).grid(column=1, row=1, sticky=W)
     #ttk.Button(frame2solution, text="Test", command=lambda: test(solution2,entries)).grid(column=1, row=1, sticky=W)
 
     ttk.Label(frame2score, text="Score :").grid(column=0, row=0, sticky=W)

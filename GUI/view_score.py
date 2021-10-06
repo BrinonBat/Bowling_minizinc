@@ -1,25 +1,8 @@
 from tkinter import *
 from tkinter import ttk
-from tkinter import font
-
 from minizinc import Instance, Model, Solver
+import interface_mzn
 
-def generate(solution,score):
-    try:
-        # Load model from file
-        model = Model("brouillon_model.mzn")
-        # Find the MiniZinc solver configuration for Gecode
-        gecode = Solver.lookup("gecode")
-        # Create an Instance of the model for Gecode
-        instance = Instance(gecode, model)
-        # Assign values
-        instance["score_total"] = int(score.get())
-        instance["init"] = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-        # Solve and print solution
-        result = instance.solve()
-        solution.set(result["partie"])
-    except ValueError:
-        pass
 
 def PrintWindow(mainframe):
     frame1 = ttk.Labelframe(mainframe, text='Générer une partie à partir d\'un score', padding="3 3 12 12")
@@ -34,6 +17,10 @@ def PrintWindow(mainframe):
     frame1.columnconfigure(0, weight=1)
     frame1.rowconfigure(0, weight=1)
 
+    nb_fails=0
+    nb_spares=0
+    nb_strikes=0
+
     score = StringVar()
     score_entry = ttk.Entry(frame1score, width=10, textvariable=score)
     score_entry.grid(column=1, row=0, sticky=(W, E))
@@ -41,7 +28,7 @@ def PrintWindow(mainframe):
     solution = StringVar()
     ttk.Label(frame1solution, width=50, textvariable=solution).grid(column=1, row=1, sticky=(W, E))
 
-    ttk.Button(frame1score, text="Valider", command=lambda: generate(solution,score)).grid(column=2, row=0, sticky=W)
+    ttk.Button(frame1score, text="Valider", command=lambda: interface_mzn.complete(nb_fails,nb_spares,nb_strikes,solution,score,NONE)).grid(column=2, row=0, sticky=W)
 
     ttk.Label(frame1score, text="Score :").grid(column=0, row=0, sticky=W)
     ttk.Label(frame1solution, text="La réponse est :").grid(column=0, row=1, sticky=W)
