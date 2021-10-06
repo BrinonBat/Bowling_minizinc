@@ -23,11 +23,28 @@ from complete import *
 
 
 def convert_to_string(partie):
-    string = ""
-    for i in range(len(partie)):
-        if i % 2 == 0:
+    string = "" 
+    i=0
+    while i<20:
+        if i % 2 == 0 or i==21 :
             string += "| "
-        string += str(partie[i]) + " "
+            if(i<18):
+                if (partie[i]==10):
+                    string += str(partie[i]) + " X "
+                    i+=1
+                elif (partie[i]+partie[i+1]==10):
+                    string += str(partie[i]) + " / "
+                    i+=1
+                else : 
+                    string += str(partie[i]) + " "
+            else : 
+                if (partie[18]==10):
+                    string += str(partie[i])+" "+str(partie[i+1])+" | "+str(partie[i+2])
+                    i+=3
+                else: string += str(partie[i]) + " "
+        else : 
+            string += str(partie[i]) + " "
+        i+=1
     return string
 
 # Servira a verifier si x est valide avant de l'envoyer à minizinc
@@ -49,12 +66,11 @@ def entryToValue(entries):
     entry_values = []
 
     for i in range(0, 21):
-        if(entries[i].get()):
-            if is_ok(entries[i].get()):
-                entry_values.append(int(entries[i].get()))
+        if(entries[i]):
+            if is_ok(entries[i]):
+                entry_values.append(int(entries[i]))
             else:
-                print(
-                    "error : please select a number between 0 and 10 at indice "+i)
+                print("error : please select a number between 0 and 10 at indice "+str(i))
                 entry_values.append(-1)
         else:
             entry_values.append(-1)
@@ -103,15 +119,29 @@ class WindowManager(ScreenManager):
 
     def complete(self, button):
         try:
-            print(self.current_screen)
-            if self.current_screen == "score_window":
+            print(self.current_screen.name)
+            partie = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+            print("ok partie")
+            if self.current_screen.name == 'score_window':
+                print("ok")
                 score = self.ids.view_score_input_score.text
-                partie = [-1, -1, -1, -1, -1, -1, -1, -1, -
-                          1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
-            else:
+                print("ok score")
+            else: 
+                print("ok else")
                 score = self.ids.view_complete_input_score.text
-                partie = self.ids.view_complete_input_partie.text
+                tab=self.ids.view_complete_input_partie
+                for i in range(0,21):
+                    if tab[i].text:
+                        print(" tab a "+str(i)+": '"+tab[i].text+"'")
+                        if is_ok(tab[i].text):
+                            partie[i]=int(tab[i].text)
+                            print("ajout du numero "+str(tab[i].text))
+                        else:
+                            print("error : please select a number between 0 and 10 at indice "+str(i))
+                #for i in range(0,21):
+                #    partie[i] = self.ids.view_complete_input_partie.text
 
+            print("ok")
             print(score)
             print(partie)
 
@@ -123,14 +153,16 @@ class WindowManager(ScreenManager):
             instance = Instance(gecode, model)
             # Assign values
             instance["score_total"] = int(score)
-            if partie != None:
-                instance["init"] = entryToValue(partie)
-            else:
-                instance["init"] = [-1, -1, -1, -1, -1, -1, -1, -1, -
-                                    1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+            instance["init"] = partie
+
 
             # Solve and print solution
             result = instance.solve()
+
+            nb_fails = result["nb_fails"]
+            nb_spares = result["nb_spares"]
+            nb_strikes = result["nb_strikes"]
+
             """
             if result.status==Status.SATISFIED:
                 solution.set(result["partie"])
@@ -138,7 +170,7 @@ class WindowManager(ScreenManager):
                 solution.set("UNSATISFIABLE")
             """
 
-            if self.current_screen == "score_window":
+            if self.current_screen.name == "score_window":
                 self.ids.view_score_solution_generee.text = convert_to_string(
                     result["partie"])
                 self.ids.view_score_label_solution_generee.opacity = 1
@@ -149,14 +181,13 @@ class WindowManager(ScreenManager):
                 self.ids.view_complete_label_solution_generee.opacity = 1
                 self.ids.view_complete_solution_generee.opacity = 1
 
-            nb_fails = result["nb_fails"]
-            nb_spares = result["nb_spares"]
-            nb_strikes = result["nb_strikes"]
+            
 
             print(" il y a "+str(nb_fails)+" echecs, "+str(nb_spares) +
                   " spares et "+str(nb_strikes)+" strikes ")
 
         except ValueError:
+            print("error")
             pass
 
 
