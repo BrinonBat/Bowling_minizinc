@@ -1,74 +1,8 @@
 from kivy.uix.screenmanager import Screen
-
-"""
-from minizinc import Instance, Model, Solver
-
-# servira a verifier si x est valide avant de l'envoyer à minizinc
-
-
-def is_ok(x):
-    try:
-        x = int(x)
-        if(x >= 0 and x <= 10):
-            return True
-        return False
-    except:
-        return False
-
-# convertion de la liste de saisie String en liste d'Int utilisable par minizinc
-
-
-def entryToValue(entries):
-    entry_values = []
-
-    for i in range(0, 21):
-        if(entries[i].get()):
-            if is_ok(entries[i].get()):
-                entry_values.append(int(entries[i].get()))
-            else:
-                print(
-                    "error : please select a number between 0 and 10 at indice "+i)
-                entry_values.append(-1)
-        else:
-            entry_values.append(-1)
-
-    return entry_values
-
-
-def complete(self, score, partie):
-    try:
-        print(score)
-        print(partie)
-        # Load model from file
-        model = Model("brouillon_model.mzn")
-        # Find the MiniZinc solver configuration for Gecode
-        gecode = Solver.lookup("gecode")
-        # Create an Instance of the model for Gecode
-        instance = Instance(gecode, model)
-        # Assign values
-        instance["score_total"] = int(score)
-        instance["init"] = entryToValue(partie)
-        print(entryToValue(partie))
-        # Solve and print solution
-        result = instance.solve()
-        
-        if result.status==Status.SATISFIED:
-            solution.set(result["partie"])
-        else :
-            solution.set("UNSATISFIABLE")
-        
-
-        self.current_screen.solution_generee.text = result["partie"]
-        print(result["partie"])
-    except ValueError:
-        pass
-
-    self.current_screen.label_solution_generee.opacity = 1
-    self.current_screen.solution_generee.opacity = 1
-"""
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from kivy.uix.dropdown import DropDown
 
 
 class CompleteWindow(Screen):
@@ -97,6 +31,41 @@ class CompleteWindow(Screen):
         screen.add_widget(score_input)
         self.ids['view_complete_input_score'] = score_input
 
+        #CHOIX SOLVE
+        dropdown = DropDown()
+
+        #Boutons minimize spare, maximize spare, minimize fails, maximize fails, minimize strikes, maximize strikes
+        btn = Button(text='satisfy', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text),)
+        dropdown.add_widget(btn)
+        btn = Button(text='maximize strikes', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+        dropdown.add_widget(btn)
+        btn = Button(text='minimize strikes', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+        dropdown.add_widget(btn)
+        btn = Button(text='maximize spares', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+        dropdown.add_widget(btn)
+        btn = Button(text='minimize spares', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+        dropdown.add_widget(btn)
+        btn = Button(text='maximize fails', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+        dropdown.add_widget(btn)
+        btn = Button(text='minimize fails', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn.bind(on_release=lambda btn: dropdown.select(btn.text))
+        dropdown.add_widget(btn)
+
+        #mise en place du dropdown
+        choix_solve = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf",text="satisfy", pos_hint={"center_x": .7, "center_y": .65},size_hint=[.15, .07],background_color={1, .3, .4, .85})
+        choix_solve.bind(on_release=dropdown.open)
+        dropdown.bind(on_select=lambda instance, x: setattr(choix_solve, 'text', x))
+        self.ids['button_choice_solve'] = choix_solve
+        screen.add_widget(choix_solve)
+
+
+
         # LABEL SAISIE PARTIE
         label_partie = Label(font_size="30px", font_name="fonts/sackers-gothic-std-heavy.otf",
                              text="Partie incomplète : ", pos_hint={"center_x": .2, "center_y": .55})
@@ -119,6 +88,7 @@ class CompleteWindow(Screen):
             .15, .07], background_normal='', background_color={1, .3, .4, .85})
         button_valider.bind(on_press=self.complete)
         screen.add_widget(button_valider)
+
 
         # AUTRE SOLUTION
         button_autre_solution = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="Autre Solution", pos_hint={"center_x": .4, "center_y": .45}, size_hint=[

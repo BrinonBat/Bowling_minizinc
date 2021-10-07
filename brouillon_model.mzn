@@ -7,7 +7,6 @@ set of int:points=0..30;
 
 % !!! on utilise des -1 pour indiquer les cases vides.
 array[lancers] of int:init; % liste de lancers à compléter par l'algo
-
 array[lancers] of var quilles:partie;
 array[tours] of var points:score;
 array[tours] of var points:bonus;
@@ -48,14 +47,14 @@ constraint nb_fails=sum(t in tours)(bool2int(partie[2*t-1]=0))+sum(t in tours)(b
 %constraint (score_total=1);
 
 %resolution
-
+%solve::int_search(partie, first_fail, indomain_max,complete) satisfy;
 %solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_fails);
 
 %solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(abs(nb_spares-nb_strikes));
 
 %solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_spares);
-solve::int_search(partie, first_fail, indomain_max,complete) satisfy;
+
 %solve satisfy; 
 
             
-output["Lancers : "]++[if ((l mod 2==0) /\ (fix(partie[l-1])=10)/\(l!=20)) then "X" else show(partie[l]) endif ++ if (l mod 2==0) then "|" else " " endif|l in 1..20]++[if ((fix(partie[21])=0) /\ (fix(partie[19])!=10)) then " " else show(partie[21]) endif]++["\nScores base : "]++[show(score[t])++" "|t in tours]++["\nBonus : "]++[show(bonus[t])++" "|t in tours]++["\nScore Total : "]++[show(score_total)]++["\nSpares : "]++[show(nb_spares)]++["\nStrikes : "]++[show(nb_strikes)]++["\nFails : "]++[show(nb_fails)];
+%output["Lancers : "]++[if ((l mod 2==0) /\ (fix(partie[l-1])=10)/\(l!=20)) then "X" else show(partie[l]) endif ++ if (l mod 2==0) then "|" else " " endif|l in 1..20]++[if ((fix(partie[21])=0) /\ (fix(partie[19])!=10)) then " " else show(partie[21]) endif]++["\nScores base : "]++[show(score[t])++" "|t in tours]++["\nBonus : "]++[show(bonus[t])++" "|t in tours]++["\nScore Total : "]++[show(score_total)]++["\nSpares : "]++[show(nb_spares)]++["\nStrikes : "]++[show(nb_strikes)]++["\nFails : "]++[show(nb_fails)];
