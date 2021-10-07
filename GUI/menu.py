@@ -22,4 +22,9 @@ class MenuWindow(Screen):
         button_complete.bind(on_release=self.load_complete_window)
         screen.add_widget(button_complete)
 
+        button_quit = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="Quitter", pos_hint={"center_x": .9, "center_y": .1}, size_hint=[
+            .15, .07], background_normal='', background_color={1, .3, .4, .85})
+        button_quit.bind(on_release=self.quit)
+        screen.add_widget(button_quit)
+
         return screen
