@@ -31,40 +31,52 @@ class CompleteWindow(Screen):
         screen.add_widget(score_input)
         self.ids['view_complete_input_score'] = score_input
 
-        #CHOIX SOLVE
+        # LABEL RESOLUTION
+        label_resolution = Label(font_size="30px", font_name="fonts/sackers-gothic-std-heavy.otf",
+                                 text="Résolution : ", pos_hint={"center_x": .55, "center_y": .65})
+        screen.add_widget(label_resolution)
+
+        # CHOIX SOLVE
         dropdown = DropDown()
 
-        #Boutons minimize spare, maximize spare, minimize fails, maximize fails, minimize strikes, maximize strikes
-        btn = Button(text='satisfy', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        # Boutons minimize spare, maximize spare, minimize fails, maximize fails, minimize strikes, maximize strikes
+        btn = Button(text='satisfy', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text),)
         dropdown.add_widget(btn)
-        btn = Button(text='maximize strikes', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn = Button(text='maximize strikes', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text))
         dropdown.add_widget(btn)
-        btn = Button(text='minimize strikes', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn = Button(text='minimize strikes', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text))
         dropdown.add_widget(btn)
-        btn = Button(text='maximize spares', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn = Button(text='maximize spares', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text))
         dropdown.add_widget(btn)
-        btn = Button(text='minimize spares', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn = Button(text='minimize spares', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text))
         dropdown.add_widget(btn)
-        btn = Button(text='maximize fails', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn = Button(text='maximize fails', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text))
         dropdown.add_widget(btn)
-        btn = Button(text='minimize fails', size_hint_y=None, height=44,font_size="20px",font_name="fonts/sackers-gothic-std.otf",background_color={1, .3, .4, .85})
+        btn = Button(text='minimize fails', size_hint_y=None, height=44, font_size="20px",
+                     font_name="fonts/sackers-gothic-std.otf", background_normal='', background_color={1, .3, .4, .85})
         btn.bind(on_release=lambda btn: dropdown.select(btn.text))
         dropdown.add_widget(btn)
 
-        #mise en place du dropdown
-        choix_solve = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf",text="satisfy", pos_hint={"center_x": .7, "center_y": .65},size_hint=[.15, .07],background_color={1, .3, .4, .85})
+        # mise en place du dropdown
+        choix_solve = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="satisfy", pos_hint={
+                             "center_x": .75, "center_y": .65}, size_hint=[.2, .07], background_normal='', background_color={1, .3, .4, .85})
         choix_solve.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance, x: setattr(choix_solve, 'text', x))
+        dropdown.bind(on_select=lambda instance,
+                      x: setattr(choix_solve, 'text', x))
         self.ids['button_choice_solve'] = choix_solve
         screen.add_widget(choix_solve)
-
-
 
         # LABEL SAISIE PARTIE
         label_partie = Label(font_size="30px", font_name="fonts/sackers-gothic-std-heavy.otf",
@@ -88,7 +100,6 @@ class CompleteWindow(Screen):
             .15, .07], background_normal='', background_color={1, .3, .4, .85})
         button_valider.bind(on_press=self.complete)
         screen.add_widget(button_valider)
-
 
         # AUTRE SOLUTION
         button_autre_solution = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="Autre Solution", pos_hint={"center_x": .4, "center_y": .45}, size_hint=[
