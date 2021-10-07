@@ -78,8 +78,12 @@ def entryToValue(entries):
     return entry_values
 
 
-class WindowManager(ScreenManager):
+    
 
+class WindowManager(ScreenManager):
+    results = []
+    sol_number=0
+    max_sol_number=100
     def build(self):
         # Image de fond
         self.canvas.add(
@@ -111,11 +115,6 @@ class WindowManager(ScreenManager):
     def load_complete_window(self, button):
         self.current = "complete_window"
         self.transition.direction = "left"
-
-    # def generate(self, score):
-    #   self.complete(score, None)
-
-    # def complete(self, score, partie):
 
     def complete(self, button):
         try:
@@ -157,11 +156,13 @@ class WindowManager(ScreenManager):
 
 
             # Solve and print solution
-            result = instance.solve()
+            self.results = instance.solve(nr_solutions=self.max_sol_number)
 
-            nb_fails = result["nb_fails"]
-            nb_spares = result["nb_spares"]
-            nb_strikes = result["nb_strikes"]
+            result=self.results.solution[self.sol_number]
+
+            nb_fails = result.nb_fails
+            nb_spares = result.nb_spares
+            nb_strikes = result.nb_strikes
 
             """
             if result.status==Status.SATISFIED:
@@ -172,16 +173,14 @@ class WindowManager(ScreenManager):
 
             if self.current_screen.name == "score_window":
                 self.ids.view_score_solution_generee.text = convert_to_string(
-                    result["partie"])
+                    result.partie)
                 self.ids.view_score_label_solution_generee.opacity = 1
                 self.ids.view_score_solution_generee.opacity = 1
             else:
                 self.ids.view_complete_solution_generee.text = convert_to_string(
-                    result["partie"])
+                    result.partie)
                 self.ids.view_complete_label_solution_generee.opacity = 1
                 self.ids.view_complete_solution_generee.opacity = 1
-
-            
 
             print(" il y a "+str(nb_fails)+" echecs, "+str(nb_spares) +
                   " spares et "+str(nb_strikes)+" strikes ")
@@ -189,7 +188,27 @@ class WindowManager(ScreenManager):
         except ValueError:
             print("error")
             pass
+    
+    def AutreSolution(self,button):
+        if(self.sol_number==self.max_sol_number-1):
+            self.sol_number=0
+        else: self.sol_number+=1
+        result=self.results.solution[self.sol_number]
 
+        nb_fails = result.nb_fails
+        nb_spares = result.nb_spares
+        nb_strikes = result.nb_strikes
+
+        if self.current_screen.name == "score_window":
+            self.ids.view_score_solution_generee.text = convert_to_string(
+                result.partie)
+            self.ids.view_score_label_solution_generee.opacity = 1
+            self.ids.view_score_solution_generee.opacity = 1
+        else:
+            self.ids.view_complete_solution_generee.text = convert_to_string(
+                result.partie)
+            self.ids.view_complete_label_solution_generee.opacity = 1
+            self.ids.view_complete_solution_generee.opacity = 1
 
 Config.set('graphics', 'width', '1414')
 Config.set('graphics', 'height', '1080')

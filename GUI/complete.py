@@ -130,4 +130,10 @@ class CompleteWindow(Screen):
         screen.add_widget(solution_generee)
         self.ids['view_complete_solution_generee'] = solution_generee
 
+        #AUTRE SOLUTION
+        button_autre_solution = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="Autre Solution", pos_hint={"center_x": .8, "center_y": .3}, size_hint=[
+            .15, .07], background_normal='', background_color={1, .3, .4, .85})
+        button_autre_solution.bind(on_press=self.AutreSolution)
+        screen.add_widget(button_autre_solution)
+
         return screen
