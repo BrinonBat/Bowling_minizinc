@@ -26,7 +26,7 @@ class CompleteWindow(Screen):
 
         # INPUT SCORE
         score_input = TextInput(size_hint=[None, None], height="40px", width="100px", pos_hint={
-                                "center_x": .3, "center_y": .65}, multiline=False)
+                                "center_x": .3, "center_y": .65}, multiline=False,text="0")
         # score_input.bind(on_text_validate=self.complete)
         screen.add_widget(score_input)
         self.ids['view_complete_input_score'] = score_input

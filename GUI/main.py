@@ -197,10 +197,10 @@ class WindowManager(ScreenManager):
 
                 print(self.solveChoice)
                 if(self.solveChoice=="satisfy"):
-                    self.results = instance.solve(nr_solutions=self.max_sol_number, timeout=timedelta(seconds=5))
+                    self.results = instance.solve(nr_solutions=self.max_sol_number, timeout=timedelta(seconds=2))
                     result = self.results.solution[self.sol_number]
                 else: 
-                    self.results=instance.solve(timeout=timedelta(seconds=5))
+                    self.results=instance.solve(timeout=timedelta(seconds=2))
                     result=self.results.solution
                 print(result)
                 nb_fails=result.nb_fails
