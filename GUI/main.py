@@ -1,19 +1,12 @@
 import os
-#os.environ['KIVY_GL_BACKEND']="sdl2"
+# os.environ['KIVY_GL_BACKEND']="sdl2"
 
 from kivy.app import App
-from kivy.config import Config
-from kivy.uix.widget import Widget
-from kivy.uix.relativelayout import RelativeLayout
-from kivy.lang import Builder
-from kivy.properties import ObjectProperty
-from kivy.uix.screenmanager import ScreenManager, Screen, NoTransition
+from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
 
 from kivy.graphics import Color
 from kivy.graphics import Rectangle
-from kivy.uix.label import Label
-from kivy.uix.button import Button
 from datetime import timedelta
 
 from minizinc import Instance, Model, Solver
@@ -22,6 +15,8 @@ from score import *
 from complete import *
 
 # Convertit un tableau d'entiers en string
+
+
 def convert_to_string(partie):
     string = ""
     i = 0
@@ -72,8 +67,6 @@ def entryToValue(entries):
             if is_ok(entries[i]):
                 entry_values.append(int(entries[i]))
             else:
-                print(
-                    "error : please select a number between 0 and 10 at indice "+str(i))
                 entry_values.append(-1)
         else:
             entry_values.append(-1)
@@ -85,8 +78,8 @@ class WindowManager(ScreenManager):
     results = []
     sol_number = 0
     max_sol_number = 100
-    solveChoice="satisfy"
-    
+    solveChoice = "satisfy"
+
     def build(self):
         # Image de fond
         self.canvas.add(
@@ -94,7 +87,7 @@ class WindowManager(ScreenManager):
         self.canvas.add(Color(0, 0, 0, .4))
         self.canvas.add(Rectangle(size=(1414, 1080)))
 
-        Window.size = (1410,1080)
+        Window.size = (1410, 1080)
 
         # Chargement de la vue Menu
         menuWindow = MenuWindow.build(self)
@@ -128,21 +121,21 @@ class WindowManager(ScreenManager):
         self.sol_number = 0
         self.max_sol_number = 1
         self.results = []
-        self.solveChoice="satisfy"
+        self.solveChoice = "satisfy"
 
         try:
             erreur_saisie = False
             text_erreur = ""
-            print(self.current_screen.name)
             score = 0
-            partie = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
+            partie = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -
+                      1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]
             if self.current_screen.name == 'score_window':
                 if self.ids.view_score_input_score.text:
                     score = self.ids.view_score_input_score.text
-                    self.solveChoice=self.ids.score_button_choice_solve.text
+                    self.solveChoice = self.ids.score_button_choice_solve.text
             else:
                 if self.ids.view_complete_input_score.text:
-                    self.solveChoice=self.ids.complete_button_choice_solve.text
+                    self.solveChoice = self.ids.complete_button_choice_solve.text
                     score = self.ids.view_complete_input_score.text
                 tab = self.ids.view_complete_input_partie
                 for i in range(0, 21):
@@ -151,18 +144,14 @@ class WindowManager(ScreenManager):
                             partie[i] = int(tab[i].text)
                         else:
                             erreur_saisie = True
-                            text_erreur = "Saisissez un nombre compris entre 0 et 10 au lancé numéro " + \
+                            text_erreur = "Saisissez un nombre compris entre 0 et 10 au lancer numéro " + \
                                 str(i + 1) + "."
 
             if erreur_saisie == False:
                 for i in range(0, 20):
                     if i % 2 == 0 and partie[i] + partie[i + 1] > 10:
                         erreur_saisie = True
-                        text_erreur = "Deux lancés consécutifs ne peuvent pas valoir plus de 10."
-
-            print("ok")
-            print(score)
-            print(partie)
+                        text_erreur = "Deux lancers consécutifs ne peuvent pas valoir plus de 10."
 
             if int(score) > 300:
                 erreur_saisie = True
@@ -173,19 +162,31 @@ class WindowManager(ScreenManager):
 
             if erreur_saisie == False:
                 # Load model from file
-                model = Model("brouillon_model.mzn")
+                model = Model("model.mzn")
 
-                #ajout de la ligne solve en fonction de la selection de l'utilisateur
-                print(str(model))
-                if(self.solveChoice=="satisfy"): 
-                    model.add_string("\n solve::int_search(partie, first_fail, indomain_max,complete) satisfy;")
+                # ajout de la ligne solve en fonction de la selection de l'utilisateur
+                if(self.solveChoice == "satisfy"):
+                    model.add_string(
+                        "\n solve::int_search(partie, first_fail, indomain_max,complete) satisfy;")
                     self.max_sol_number = 100
-                elif(self.solveChoice=="maximize strikes"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_strikes)")
-                elif(self.solveChoice=="minimize strikes"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(nb_strikes)")
-                elif(self.solveChoice=="maximize spares"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_spares)")
-                elif(self.solveChoice=="minimize spares"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(nb_spares)")
-                elif(self.solveChoice=="maximize fails"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_fails)")
-                elif(self.solveChoice=="minimize fails"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_fails)")
+                elif(self.solveChoice == "maximize strikes"):
+                    model.add_string(
+                        "\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_strikes)")
+                elif(self.solveChoice == "minimize strikes"):
+                    model.add_string(
+                        "\n solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(nb_strikes)")
+                elif(self.solveChoice == "maximize spares"):
+                    model.add_string(
+                        "\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_spares)")
+                elif(self.solveChoice == "minimize spares"):
+                    model.add_string(
+                        "\n solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(nb_spares)")
+                elif(self.solveChoice == "maximize fails"):
+                    model.add_string(
+                        "\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_fails)")
+                elif(self.solveChoice == "minimize fails"):
+                    model.add_string(
+                        "\n solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(nb_fails)")
                 # Find the MiniZinc solver configuration for Gecode
                 gecode = Solver.lookup("gecode")
                 # Create an Instance of the model for Gecode
@@ -195,17 +196,16 @@ class WindowManager(ScreenManager):
                 instance["init"] = partie
                 # Solve and print solution
 
-                print(self.solveChoice)
-                if(self.solveChoice=="satisfy"):
-                    self.results = instance.solve(nr_solutions=self.max_sol_number, timeout=timedelta(seconds=2))
+                if(self.solveChoice == "satisfy"):
+                    self.results = instance.solve(
+                        nr_solutions=self.max_sol_number, timeout=timedelta(seconds=2))
                     result = self.results.solution[self.sol_number]
-                else: 
-                    self.results=instance.solve(timeout=timedelta(seconds=2))
-                    result=self.results.solution
-                print(result)
-                nb_fails=result.nb_fails
-                nb_spares=result.nb_spares
-                nb_strikes=result.nb_strikes
+                else:
+                    self.results = instance.solve(timeout=timedelta(seconds=2))
+                    result = self.results.solution
+                nb_fails = result.nb_fails
+                nb_spares = result.nb_spares
+                nb_strikes = result.nb_strikes
 
                 label_solution = "Solution générée : (" + str(
                     self.sol_number + 1) + "/" + str(len(self.results)) + ")"
@@ -234,17 +234,10 @@ class WindowManager(ScreenManager):
                 else:
                     self.ids.view_complete_button_autre_solution.disabled = False
 
-            # print(" il y a "+str(nb_fails)+" echecs, "+str(nb_spares) +
-            #      " spares et "+str(nb_strikes)+" strikes ")
-
         except ValueError:
-            print("error")
             pass
 
     def AutreSolution(self, button):
-        print(self.results == None)
-        print(len(self.results))
-        print(self.max_sol_number)
         if len(self.results) <= 0:
             return
 
@@ -275,7 +268,7 @@ class WindowManager(ScreenManager):
                 self.sol_number + 1) + "/" + str(len(self.results)) + ")"
             self.ids.view_complete_solution_generee.opacity = 1
 
-    #def changeSolve(self,button):
+    # def changeSolve(self,button):
 
 #Config.set('graphics', 'width', '1414')
 #Config.set('graphics', 'height', '1080')
@@ -289,5 +282,6 @@ class MainApp(App):
         root.build()
         return root
         # return kv
+
 
 MainApp().run()

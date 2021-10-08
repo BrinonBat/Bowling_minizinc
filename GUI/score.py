@@ -2,8 +2,6 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
-from kivy.graphics import Color
-from kivy.graphics import Rectangle
 from kivy.uix.dropdown import DropDown
 
 
@@ -30,8 +28,7 @@ class ScoreWindow(Screen):
 
         # SAISIE SCORE
         score_input = TextInput(size_hint=[None, None], height="40px", width="100px", pos_hint={
-                                "center_x": .3, "center_y": .65}, multiline=False,text="0")
-        # score_input.bind(on_text_validate=self.complete)
+                                "center_x": .3, "center_y": .65}, multiline=False, text="0")
         screen.add_widget(score_input)
         self.ids['view_score_input_score'] = score_input
 
@@ -77,7 +74,8 @@ class ScoreWindow(Screen):
         choix_solve = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="satisfy", pos_hint={
                              "center_x": .75, "center_y": .65}, size_hint=[.2, .07], background_normal='',  background_color={1, .3, .4, .85})
         choix_solve.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance,x: setattr(choix_solve, 'text', x))
+        dropdown.bind(on_select=lambda instance,
+                      x: setattr(choix_solve, 'text', x))
         self.ids['score_button_choice_solve'] = choix_solve
         screen.add_widget(choix_solve)
 

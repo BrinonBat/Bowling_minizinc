@@ -26,8 +26,7 @@ class CompleteWindow(Screen):
 
         # INPUT SCORE
         score_input = TextInput(size_hint=[None, None], height="40px", width="100px", pos_hint={
-                                "center_x": .3, "center_y": .65}, multiline=False,text="0")
-        # score_input.bind(on_text_validate=self.complete)
+                                "center_x": .3, "center_y": .65}, multiline=False, text="0")
         screen.add_widget(score_input)
         self.ids['view_complete_input_score'] = score_input
 
@@ -83,16 +82,12 @@ class CompleteWindow(Screen):
                              text="Partie incomplète : ", pos_hint={"center_x": .2, "center_y": .55})
         screen.add_widget(label_partie)
 
-#        partie_input = TextInput(size_hint=[None, None], height="40px", width="500px", pos_hint={
-#            "center_x": .2, "center_y": .4}, multiline=False)
-
         # SAISIE PARTIE
         self.liste_saisie_partie = []
         for i in range(0, 21):
             self.liste_saisie_partie.append(TextInput(size_hint=[None, None], height="30px", width="30px", pos_hint={
                                             "center_x": (i/33.0)+0.35, "center_y": .55}, multiline=False))
             screen.add_widget(self.liste_saisie_partie[i])
-            #self.ids['D'+str(i)] = self.liste_saisie_partie[i]
         self.ids['view_complete_input_partie'] = self.liste_saisie_partie
 
         # BOUTON VALIDER
