@@ -77,9 +77,8 @@ class ScoreWindow(Screen):
         choix_solve = Button(font_size="25px", font_name="fonts/sackers-gothic-std.otf", text="satisfy", pos_hint={
                              "center_x": .75, "center_y": .65}, size_hint=[.2, .07], background_normal='',  background_color={1, .3, .4, .85})
         choix_solve.bind(on_release=dropdown.open)
-        dropdown.bind(on_select=lambda instance,
-                      x: setattr(choix_solve, 'text', x))
-        self.ids['button_choice_solve'] = choix_solve
+        dropdown.bind(on_select=lambda instance,x: setattr(choix_solve, 'text', x))
+        self.ids['score_button_choice_solve'] = choix_solve
         screen.add_widget(choix_solve)
 
         # BOUTON VALIDER

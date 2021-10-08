@@ -75,7 +75,7 @@ class CompleteWindow(Screen):
         choix_solve.bind(on_release=dropdown.open)
         dropdown.bind(on_select=lambda instance,
                       x: setattr(choix_solve, 'text', x))
-        self.ids['button_choice_solve'] = choix_solve
+        self.ids['complete_button_choice_solve'] = choix_solve
         screen.add_widget(choix_solve)
 
         # LABEL SAISIE PARTIE

@@ -85,7 +85,8 @@ class WindowManager(ScreenManager):
     results = []
     sol_number = 0
     max_sol_number = 100
-    solveChoice=0
+    solveChoice="satisfy"
+    
     def build(self):
         # Image de fond
         self.canvas.add(
@@ -137,8 +138,10 @@ class WindowManager(ScreenManager):
             if self.current_screen.name == 'score_window':
                 if self.ids.view_score_input_score.text:
                     score = self.ids.view_score_input_score.text
+                    self.solveChoice=self.ids.score_button_choice_solve.text
             else:
                 if self.ids.view_complete_input_score.text:
+                    self.solveChoice=self.ids.complete_button_choice_solve.text
                     score = self.ids.view_complete_input_score.text
                 tab = self.ids.view_complete_input_partie
                 for i in range(0, 21):
@@ -172,7 +175,6 @@ class WindowManager(ScreenManager):
                 model = Model("brouillon_model.mzn")
 
                 #ajout de la ligne solve en fonction de la selection de l'utilisateur
-                self.solveChoice=self.ids.button_choice_solve.text
                 print(str(model))
                 if(self.solveChoice=="satisfy"): model.add_string("\n solve::int_search(partie, first_fail, indomain_max,complete) satisfy;")
                 elif(self.solveChoice=="maximize strikes"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_strikes)")
@@ -190,6 +192,7 @@ class WindowManager(ScreenManager):
                 instance["init"] = partie
                 # Solve and print solution
 
+                print(self.solveChoice)
                 if(self.solveChoice=="satisfy"):
                     self.results = instance.solve(nr_solutions=self.max_sol_number, timeout=timedelta(seconds=5))
                     result = self.results.solution[self.sol_number]
