@@ -126,6 +126,7 @@ class WindowManager(ScreenManager):
 
     def complete(self, button):
         self.sol_number = 0
+        self.max_sol_number = 1
         self.results = []
         self.solveChoice="satisfy"
 
@@ -176,7 +177,9 @@ class WindowManager(ScreenManager):
 
                 #ajout de la ligne solve en fonction de la selection de l'utilisateur
                 print(str(model))
-                if(self.solveChoice=="satisfy"): model.add_string("\n solve::int_search(partie, first_fail, indomain_max,complete) satisfy;")
+                if(self.solveChoice=="satisfy"): 
+                    model.add_string("\n solve::int_search(partie, first_fail, indomain_max,complete) satisfy;")
+                    self.max_sol_number = 100
                 elif(self.solveChoice=="maximize strikes"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_strikes)")
                 elif(self.solveChoice=="minimize strikes"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(nb_strikes)")
                 elif(self.solveChoice=="maximize spares"): model.add_string("\n solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_spares)")
@@ -196,7 +199,9 @@ class WindowManager(ScreenManager):
                 if(self.solveChoice=="satisfy"):
                     self.results = instance.solve(nr_solutions=self.max_sol_number, timeout=timedelta(seconds=5))
                     result = self.results.solution[self.sol_number]
-                else: result=instance.solve(timeout=timedelta(seconds=5)).solution
+                else: 
+                    self.results=instance.solve(timeout=timedelta(seconds=5))
+                    result=self.results.solution
                 print(result)
                 nb_fails=result.nb_fails
                 nb_spares=result.nb_spares
