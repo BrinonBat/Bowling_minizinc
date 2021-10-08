@@ -5,7 +5,7 @@ set of int:lancers=1..21;
 set of int:tours=1..10;
 set of int:points=0..30;
 
-% !!! on utilise des -1 pour indiquer les cases vides.
+
 array[lancers] of int:init; % liste de lancers à compléter par l'algo
 array[lancers] of var quilles:partie;
 array[tours] of var points:score;
@@ -13,9 +13,9 @@ array[tours] of var points:bonus;
 int:score_total;
 var int:nb_spares;
 var int:nb_strikes;
-var int:nb_fails; %nombre de lancer = 0 (pas après un strike)
+var int:nb_fails; %nombre de lancers égaux à 0 (sauf après un strike)
 
-%init
+%init /!\ on utilise des -1 pour indiquer les cases vides.
 constraint forall(l in lancers where init[l]!=-1)(partie[l]=init[l]);
 
 %contraintes de liaisons
@@ -38,23 +38,9 @@ constraint ((partie[17]=10 /\ partie[19]=10)->(bonus[9]=10+partie[20])); %cas de
 constraint forall(t in tours where t<10)(partie[2*t-1]+partie[2*t]<=10);
 constraint ((partie[19]!=10)->(partie[19]+partie[20]<=10));
 
-%nombre de spares et de strikes et coups nuls
+%nombre de spares, de strikes et de coups nuls
 constraint nb_strikes=sum(t in tours)(bool2int(partie[2*t-1]=10));
 constraint nb_spares=sum(t in tours)(bool2int((partie[2*t-1]<10)/\(partie[2*t-1]+partie[2*t]=10)));
 constraint nb_fails=sum(t in tours)(bool2int(partie[2*t-1]=0))+sum(t in tours)(bool2int((partie[2*t]=0)/\(partie[2*t-1]!=10)));
 
-%score souhaité
-%constraint (score_total=1);
-
-%resolution
-%solve::int_search(partie, first_fail, indomain_max,complete) satisfy;
-%solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_fails);
-
-%solve::int_search(partie, dom_w_deg, indomain_max,complete) minimize(abs(nb_spares-nb_strikes));
-
-%solve::int_search(partie, dom_w_deg, indomain_max,complete) maximize(nb_spares);
-
-%solve satisfy; 
-
-            
-%output["Lancers : "]++[if ((l mod 2==0) /\ (fix(partie[l-1])=10)/\(l!=20)) then "X" else show(partie[l]) endif ++ if (l mod 2==0) then "|" else " " endif|l in 1..20]++[if ((fix(partie[21])=0) /\ (fix(partie[19])!=10)) then " " else show(partie[21]) endif]++["\nScores base : "]++[show(score[t])++" "|t in tours]++["\nBonus : "]++[show(bonus[t])++" "|t in tours]++["\nScore Total : "]++[show(score_total)]++["\nSpares : "]++[show(nb_spares)]++["\nStrikes : "]++[show(nb_strikes)]++["\nFails : "]++[show(nb_fails)];
+% l'output et le solve sont gérés par la partie python
